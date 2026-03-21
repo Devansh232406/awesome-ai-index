@@ -1,0 +1,40 @@
+name: Bug Report
+description: Report a data error or validation issue
+title: "[Bug]: "
+labels: ["bug", "needs-triage"]
+body:
+  - type: markdown
+    attributes:
+      value: Thank you for reporting an issue!
+  - type: dropdown
+    id: dataset
+    attributes:
+      label: Affected Dataset
+      options:
+        - models.json
+        - vendors.json
+        - benchmarks.json
+        - frameworks.json
+        - Other
+    validations:
+      required: true
+  - type: textarea
+    id: description
+    attributes:
+      label: Description
+      description: Describe the bug or data error
+      placeholder: e.g., Model X has incorrect MMLU score
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected Data
+      description: What should the correct data be?
+      placeholder: Provide the correct value with a source link
+  - type: textarea
+    id: source
+    attributes:
+      label: Source/Evidence
+      description: Link to the authoritative source
+      placeholder: https://...
