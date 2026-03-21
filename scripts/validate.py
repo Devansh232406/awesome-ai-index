@@ -119,7 +119,7 @@ def main():
             validate_benchmarks(bdata)
 
     # Frameworks
-    fp = DATA / "compliance" / "frameworks.json"
+    fp = DATA / "frameworks" / "frameworks.json"
     if fp.exists():
         print("[frameworks.json]")
         fdata = load_json(fp)
