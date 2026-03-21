@@ -10,7 +10,7 @@
 [![HuggingFace](https://img.shields.io/badge/HuggingFace-Dataset-yellow)](https://huggingface.co/datasets/alpha-one-index/awesome-ai-index)
 [![Awesome](https://awesome.re/badge.svg)](https://awesome.re)
 
-Machine-readable JSON + CSV. No paywalls. Updated every Friday via GitHub Actions.
+Machine-readable JSON. No paywalls. Updated every Friday via GitHub Actions.
 
 **Full reports, vendor deep-dives, and premium data:** [alphaoneindex.com](https://alphaoneindex.com) | [AI Vendor Risk Index](https://github.com/alpha-one-index/ai-vendor-risk-index)
 
@@ -20,10 +20,10 @@ Machine-readable JSON + CSV. No paywalls. Updated every Friday via GitHub Action
 
 | Dataset | Records | Format | Updated |
 |---------|---------|--------|---------|
-| [AI Models](data/models/) | 130+ | JSON + CSV | Weekly |
-| [Vendors](data/vendors/) | 40+ | JSON + CSV | Weekly |
+| [AI Models](data/models/) | 130+ | JSON | Weekly |
+| [Vendors](data/vendors/) | 40+ | JSON | Weekly |
 | [Benchmarks](data/benchmarks/) | 12+ | JSON | Monthly |
-| [Compliance Frameworks](data/compliance/) | 7 | JSON | Quarterly |
+| [Compliance Frameworks](data/frameworks/) | 7 | JSON | Quarterly |
 
 ## Why This Exists
 
@@ -41,8 +41,8 @@ This repo is that missing layer.
 # Get all models as JSON
 curl https://raw.githubusercontent.com/alpha-one-index/awesome-ai-index/main/data/models/models.json
 
-# Get all vendors as CSV
-curl https://raw.githubusercontent.com/alpha-one-index/awesome-ai-index/main/data/vendors/vendors.csv
+# Get all vendors as JSON
+curl https://raw.githubusercontent.com/alpha-one-index/awesome-ai-index/main/data/vendors/vendors.json
 
 # Get benchmarks
 curl https://raw.githubusercontent.com/alpha-one-index/awesome-ai-index/main/data/benchmarks/benchmarks.json
@@ -74,13 +74,13 @@ import requests
 
 # Models
 models = requests.get(
-  "https://raw.githubusercontent.com/alpha-one-index/awesome-ai-index/main/data/models/models.json"
+    "https://raw.githubusercontent.com/alpha-one-index/awesome-ai-index/main/data/models/models.json"
 ).json()
 
 # Vendors
 vendors = requests.get(
-  "https://raw.githubusercontent.com/alpha-one-index/awesome-ai-index/main/data/vendors/vendors.csv"
-).text
+    "https://raw.githubusercontent.com/alpha-one-index/awesome-ai-index/main/data/vendors/vendors.json"
+).json()
 ```
 
 ## Academic Citation
@@ -89,12 +89,12 @@ If you use this dataset in research, please cite:
 
 ```bibtex
 @dataset{awesome_ai_index_2026,
-  title        = {awesome-ai-index: The Definitive Open-Source AI Ecosystem Database},
-  author       = {Alpha One Index},
-  year         = 2026,
-  publisher    = {GitHub},
-  url          = {https://github.com/alpha-one-index/awesome-ai-index},
-  license      = {CC-BY-SA-4.0}
+  title = {awesome-ai-index: The Definitive Open-Source AI Ecosystem Database},
+  author = {Alpha One Index},
+  year = 2026,
+  publisher = {GitHub},
+  url = {https://github.com/alpha-one-index/awesome-ai-index},
+  license = {CC-BY-SA-4.0}
 }
 ```
 
@@ -102,7 +102,7 @@ See also: [CITATION.cff](CITATION.cff)
 
 ## Schema & Methodology
 
-- [schemas/schema.json](schemas/schema.json) — Full JSON Schema for validation
+- [data/schemas/schema.json](data/schemas/schema.json) — Full JSON Schema for validation
 - [METHODOLOGY.md](METHODOLOGY.md) — Data collection and scoring methodology
 
 ## Contributing
@@ -126,4 +126,4 @@ Read [CONTRIBUTING.md](CONTRIBUTING.md) for full guide.
 
 ---
 
-<sub>Maintained by [Alpha One Index](https://alphaoneindex.com) | Data updated every Friday | Submit corrections via Issues</sub>
+Maintained by [Alpha One Index](https://alphaoneindex.com) | Data updated every Friday | Submit corrections via Issues
