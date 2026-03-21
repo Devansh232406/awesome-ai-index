@@ -1,0 +1,33 @@
+data:
+  - changed-files:
+    - any-glob-to-any-file: 'data/**'
+
+models:
+  - changed-files:
+    - any-glob-to-any-file: 'data/models/**'
+
+vendors:
+  - changed-files:
+    - any-glob-to-any-file: 'data/vendors/**'
+
+benchmarks:
+  - changed-files:
+    - any-glob-to-any-file: 'data/benchmarks/**'
+
+compliance:
+  - changed-files:
+    - any-glob-to-any-file: 'data/frameworks/**'
+
+workflows:
+  - changed-files:
+    - any-glob-to-any-file: '.github/workflows/**'
+
+documentation:
+  - changed-files:
+    - any-glob-to-any-file:
+      - '*.md'
+      - 'docs/**'
+
+scripts:
+  - changed-files:
+    - any-glob-to-any-file: 'scripts/**'
