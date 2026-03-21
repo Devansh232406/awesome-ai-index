@@ -1,0 +1,22 @@
+name: Sync to HuggingFace
+
+on:
+  push:
+    branches: [main]
+    paths: ['data/**']
+  workflow_dispatch:
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Push to HuggingFace Hub
+        env:
+          HF_TOKEN: ${{ secrets.HF_TOKEN }}
+        run: |
+          git remote add hf https://huggingface.co/datasets/alpha-one-index/awesome-ai-index || true
+          git remote set-url hf https://user:${HF_TOKEN}@huggingface.co/datasets/alpha-one-index/awesome-ai-index
+          git push hf main --force
