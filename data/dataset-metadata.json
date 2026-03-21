@@ -1,0 +1,36 @@
+{
+  "title": "Awesome AI Index",
+  "id": "alphaoneindex/awesome-ai-index",
+  "licenses": [
+    {
+      "name": "CC-BY-SA-4.0"
+    }
+  ],
+  "keywords": [
+    "artificial intelligence",
+    "machine learning",
+    "deep learning",
+    "ai models",
+    "benchmarks",
+    "compliance",
+    "risk assessment"
+  ],
+  "resources": [
+    {
+      "path": "models/models.json",
+      "description": "AI models catalog with metadata"
+    },
+    {
+      "path": "vendors/vendors.json",
+      "description": "AI vendor profiles and risk data"
+    },
+    {
+      "path": "benchmarks/benchmarks.json",
+      "description": "Model benchmark results"
+    },
+    {
+      "path": "frameworks/frameworks.json",
+      "description": "AI frameworks catalog"
+    }
+  ]
+}
