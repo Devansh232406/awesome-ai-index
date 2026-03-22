@@ -2,12 +2,11 @@
 """Fetch public LLM leaderboard data and write to data/leaderboard/.
 
 Sources:
-  - HuggingFace Open LLM Leaderboard (public API)
-  - LMSYS Chatbot Arena (public standings)
+  - Arena AI (formerly LMSYS Chatbot Arena) via public API
+  - HuggingFace Open LLM Leaderboard archived dataset
 """
 import json
 import os
-import sys
 from datetime import datetime, timezone
 
 import requests
@@ -16,14 +15,70 @@ DATA_DIR = os.path.join(os.path.dirname(__file__), '..', 'data', 'leaderboard')
 os.makedirs(DATA_DIR, exist_ok=True)
 
 
-def fetch_open_llm_leaderboard(limit=20):
-    """Fetch top models from HuggingFace Open LLM Leaderboard v2."""
-    url = 'https://huggingface.co/api/spaces/open-llm-leaderboard/open_llm_leaderboard/api/predict'
-    # Fallback: scrape the dataset directly
-    dataset_url = 'https://datasets-server.huggingface.co/rows?dataset=open-llm-leaderboard%2Fresults&config=default&split=train&offset=0&length=50'
+def fetch_arena_ai(limit=20):
+    """Fetch top models from Arena AI (formerly LMSYS Chatbot Arena)."""
+    # Public API endpoint - no auth required
+    url = 'https://api.wulong.dev/arena-ai-leaderboards/v1/leaderboard?name=text'
     entries = []
     try:
-        resp = requests.get(dataset_url, timeout=30)
+        resp = requests.get(url, timeout=30)
+        if resp.status_code == 200:
+            data = resp.json()
+            models = data.get('models', data) if isinstance(data, dict) else data
+            if isinstance(models, list):
+                for m in models[:limit]:
+                    entries.append({
+                        'model': m.get('model', m.get('name', 'Unknown')),
+                        'vendor': m.get('vendor', m.get('organization', None)),
+                        'elo_score': m.get('score', m.get('elo', None)),
+                        'rank': m.get('rank', None),
+                        'source': 'arena-ai',
+                        'url': 'https://arena.ai/',
+                    })
+            print(f'[leaderboard] Fetched {len(entries)} models from Arena AI')
+        else:
+            print(f'[leaderboard] Arena AI returned {resp.status_code}')
+    except Exception as e:
+        print(f'[leaderboard] Error fetching Arena AI: {e}')
+    return entries
+
+
+def fetch_arena_ai_raw(limit=20):
+    """Fallback: fetch from raw GitHub JSON of arena-ai-leaderboards."""
+    url = 'https://raw.githubusercontent.com/oolong-tea-2026/arena-ai-leaderboards/main/data/latest.json'
+    entries = []
+    try:
+        resp = requests.get(url, timeout=30)
+        if resp.status_code == 200:
+            data = resp.json()
+            # Navigate to text leaderboard
+            if isinstance(data, dict):
+                text_data = data.get('text', data)
+                models = text_data.get('models', []) if isinstance(text_data, dict) else []
+                for m in models[:limit]:
+                    entries.append({
+                        'model': m.get('model', m.get('name', 'Unknown')),
+                        'vendor': m.get('vendor', None),
+                        'elo_score': m.get('score', m.get('elo', None)),
+                        'rank': m.get('rank', None),
+                        'source': 'arena-ai-github',
+                        'url': 'https://arena.ai/',
+                    })
+            print(f'[leaderboard] Fetched {len(entries)} models from Arena AI (GitHub raw)')
+        else:
+            print(f'[leaderboard] Arena AI GitHub raw returned {resp.status_code}')
+    except Exception as e:
+        print(f'[leaderboard] Error fetching Arena AI raw: {e}')
+    return entries
+
+
+def fetch_open_llm_leaderboard(limit=20):
+    """Fetch from archived Open LLM Leaderboard dataset on HuggingFace."""
+    # The leaderboard was archived in March 2025; dataset still accessible
+    url = 'https://datasets-server.huggingface.co/rows?dataset=open-llm-leaderboard%2Fresults&config=default&split=train&offset=0&length=50'
+    entries = []
+    try:
+        resp = requests.get(url, timeout=30)
         if resp.status_code == 200:
             data = resp.json()
             rows = data.get('rows', [])
@@ -33,60 +88,14 @@ def fetch_open_llm_leaderboard(limit=20):
                     'model': r.get('model_name', r.get('fullname', 'Unknown')),
                     'average_score': r.get('average', r.get('Average', None)),
                     'parameters': r.get('params', r.get('#Params (B)', None)),
-                    'architecture': r.get('architecture', r.get('Architecture', None)),
-                    'source': 'open-llm-leaderboard',
+                    'source': 'open-llm-leaderboard-archived',
                     'url': f"https://huggingface.co/{r.get('model_name', r.get('fullname', ''))}",
                 })
             print(f'[leaderboard] Fetched {len(entries)} models from Open LLM Leaderboard dataset')
         else:
-            print(f'[leaderboard] Open LLM Leaderboard dataset returned {resp.status_code}')
+            print(f'[leaderboard] Open LLM Leaderboard dataset returned {resp.status_code}, skipping')
     except Exception as e:
         print(f'[leaderboard] Error fetching Open LLM Leaderboard: {e}')
-    return entries
-
-
-def fetch_lmsys_arena(limit=20):
-    """Fetch top models from LMSYS Chatbot Arena leaderboard."""
-    url = 'https://huggingface.co/spaces/lmsys/chatbot-arena-leaderboard'
-    # Use the HF datasets API for the arena results
-    dataset_url = 'https://datasets-server.huggingface.co/rows?dataset=lmsys%2Fchatbot_arena_conversations&config=default&split=train&offset=0&length=1'
-    # Alternative: try the arena standings JSON
-    arena_url = 'https://storage.googleapis.com/arena_external_data/elo_results_latest.json'
-    entries = []
-    try:
-        resp = requests.get(arena_url, timeout=30)
-        if resp.status_code == 200:
-            data = resp.json()
-            # Parse Elo rankings
-            if isinstance(data, dict):
-                # Could be keyed by model name
-                models = []
-                for model_name, stats in data.items():
-                    if isinstance(stats, dict):
-                        models.append({
-                            'model': model_name,
-                            'elo_rating': stats.get('elo', stats.get('rating', None)),
-                            'votes': stats.get('num_battles', stats.get('votes', None)),
-                            'source': 'lmsys-chatbot-arena',
-                            'url': f'https://chat.lmsys.org/',
-                        })
-                # Sort by Elo descending
-                models.sort(key=lambda x: x.get('elo_rating') or 0, reverse=True)
-                entries = models[:limit]
-            elif isinstance(data, list):
-                for item in data[:limit]:
-                    if isinstance(item, dict):
-                        entries.append({
-                            'model': item.get('model', item.get('name', 'Unknown')),
-                            'elo_rating': item.get('elo', item.get('rating', None)),
-                            'source': 'lmsys-chatbot-arena',
-                            'url': 'https://chat.lmsys.org/',
-                        })
-            print(f'[leaderboard] Fetched {len(entries)} models from LMSYS Arena')
-        else:
-            print(f'[leaderboard] LMSYS Arena returned {resp.status_code}, skipping')
-    except Exception as e:
-        print(f'[leaderboard] Error fetching LMSYS Arena: {e}')
     return entries
 
 
@@ -94,17 +103,19 @@ def main():
     timestamp = datetime.now(timezone.utc).isoformat()
     all_entries = []
 
-    # Open LLM Leaderboard
+    # Arena AI (primary source - actively maintained)
+    arena = fetch_arena_ai(limit=20)
+    if not arena:
+        # Fallback to raw GitHub data
+        arena = fetch_arena_ai_raw(limit=20)
+    all_entries.extend(arena)
+
+    # Open LLM Leaderboard (archived but still useful reference data)
     open_llm = fetch_open_llm_leaderboard(limit=20)
     all_entries.extend(open_llm)
 
-    # LMSYS Chatbot Arena
-    arena = fetch_lmsys_arena(limit=20)
-    all_entries.extend(arena)
-
     if not all_entries:
         print('[leaderboard] WARNING: No leaderboard data fetched from any source')
-        # Write empty file so workflow doesn't fail
         output = {'fetched_at': timestamp, 'sources': [], 'entries': []}
     else:
         sources = list(set(e.get('source', '') for e in all_entries))
@@ -120,12 +131,11 @@ def main():
         json.dump(output, f, indent=2, default=str)
     print(f'[leaderboard] Wrote {len(all_entries)} entries to {output_path}')
 
-    # Also write a latest summary
     summary_path = os.path.join(DATA_DIR, 'latest_summary.json')
     summary = {
         'fetched_at': timestamp,
+        'arena_ai_count': len(arena),
         'open_llm_leaderboard_count': len(open_llm),
-        'lmsys_arena_count': len(arena),
         'top_models': [e.get('model', '') for e in all_entries[:10]],
     }
     with open(summary_path, 'w') as f:
