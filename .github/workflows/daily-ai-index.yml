@@ -1,0 +1,64 @@
+name: Daily AI Index Update
+
+on:
+  schedule:
+    - cron: '0 0 * * *'  # Every day at 00:00 UTC
+  workflow_dispatch:  # Allow manual triggers
+
+permissions:
+  contents: write
+
+jobs:
+  update-index:
+    runs-on: ubuntu-latest
+    name: Fetch and append daily AI index entries
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Set up Python 3.12
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install dependencies
+        run: |
+          pip install requests python-dateutil
+
+      - name: Fetch arXiv papers
+        id: arxiv
+        run: |
+          python scripts/fetch_arxiv.py
+
+      - name: Fetch HuggingFace trending models
+        id: huggingface
+        run: |
+          python scripts/fetch_huggingface.py
+
+      - name: Generate ai-index.json artifact
+        run: |
+          python scripts/generate_ai_index_json.py
+
+      - name: Generate events.csv artifact
+        run: |
+          python scripts/generate_events_csv.py
+
+      - name: Check for changes
+        id: check_changes
+        run: |
+          git diff --exit-code || echo "changes=true" >> $GITHUB_OUTPUT
+
+      - name: Commit and push updates
+        if: steps.check_changes.outputs.changes == 'true'
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          DATE=$(date -u +"%Y-%m-%d")
+          git add -A
+          git commit -m "Daily AI Index Update - ${DATE}"
+          git push
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
