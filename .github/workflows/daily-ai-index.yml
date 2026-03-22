@@ -27,7 +27,11 @@ jobs:
 
       - name: Install dependencies
         run: |
-          pip install requests python-dateutil
+          pip install requests python-dateutil beautifulsoup4 lxml
+
+      - name: Set current date
+        id: date
+        run: echo "today=$(date -u +'%Y-%m-%d')" >> $GITHUB_OUTPUT
 
       - name: Fetch arXiv papers
         id: arxiv
@@ -38,6 +42,11 @@ jobs:
         id: huggingface
         run: |
           python scripts/fetch_huggingface.py
+
+      - name: Fetch LLM leaderboard data
+        id: leaderboard
+        run: |
+          python scripts/fetch_llm_leaderboard.py
 
       - name: Generate ai-index.json artifact
         run: |
@@ -51,9 +60,9 @@ jobs:
         uses: peter-evans/create-pull-request@v7
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          commit-message: "Daily AI Index Update - $(date -u +'%Y-%m-%d')"
-          title: "Daily AI Index Update - $(date -u +'%Y-%m-%d')"
-          body: "Automated daily update of AI index data including arXiv papers, HuggingFace trending models, ai-index.json, and events.csv."
+          commit-message: "Daily AI Index Update — ${{ steps.date.outputs.today }}"
+          title: "Daily AI Index Update — ${{ steps.date.outputs.today }}"
+          body: "Automated daily update of AI index data including arXiv papers, HuggingFace trending models, LLM leaderboard rankings, ai-index.json, and events.csv."
           branch: daily-update
           delete-branch: true
           add-paths: |
