@@ -1,0 +1,79 @@
+name: Add Paper or Tool
+description: Submit a new research paper, framework, or tool to the AI index
+title: "[Add]: "
+labels: ["enhancement", "new-entry"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for contributing to the Awesome AI Index! Please fill out the form below to suggest a new paper or tool.
+  - type: dropdown
+    id: entry-type
+    attributes:
+      label: Entry Type
+      description: What type of entry are you submitting?
+      options:
+        - Research Paper
+        - Framework / Library
+        - Tool / Application
+        - Benchmark / Dataset
+        - Other
+    validations:
+      required: true
+  - type: input
+    id: name
+    attributes:
+      label: Name
+      description: Name of the paper, tool, or framework
+      placeholder: e.g. "LLaMA 3", "vLLM", "Attention Is All You Need"
+    validations:
+      required: true
+  - type: input
+    id: url
+    attributes:
+      label: URL
+      description: Link to the paper, GitHub repo, or official page
+      placeholder: https://
+    validations:
+      required: true
+  - type: textarea
+    id: description
+    attributes:
+      label: Description
+      description: Brief description of what this paper/tool does and why it should be included
+      placeholder: "A short summary (2-3 sentences) explaining the significance..."
+    validations:
+      required: true
+  - type: input
+    id: category
+    attributes:
+      label: Suggested Category
+      description: Which category does this best fit in?
+      placeholder: e.g. "LLM Inference", "Model Training", "Benchmarks", "Safety"
+    validations:
+      required: false
+  - type: input
+    id: authors
+    attributes:
+      label: Authors / Organization
+      description: Who created this?
+      placeholder: e.g. "Meta AI", "Google DeepMind"
+    validations:
+      required: false
+  - type: input
+    id: date
+    attributes:
+      label: Release / Publication Date
+      description: When was this published or released?
+      placeholder: YYYY-MM-DD
+    validations:
+      required: false
+  - type: checkboxes
+    id: verification
+    attributes:
+      label: Verification
+      options:
+        - label: I have verified this entry does not already exist in the index
+          required: true
+        - label: The URL is publicly accessible
+          required: true
