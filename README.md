@@ -1,3 +1,24 @@
+---
+license: cc-by-sa-4.0
+task_categories:
+  - text-classification
+  - question-answering
+language:
+  - en
+tags:
+  - ai
+  - machine-learning
+  - deep-learning
+  - awesome-list
+  - ai-tools
+  - llm
+  - rag
+  - agents
+  - benchmarks
+size_categories:
+  - 1K<n<10K
+pretty_name: Awesome AI Index
+---
 # awesome-ai-index
 
 > The definitive Awesome AI Index — weekly-updated archive of tools, models, papers, courses, code, agents, RAG, fine-tuning, and live event concepts for AI engineers & leaders. Daily fresh entries.
