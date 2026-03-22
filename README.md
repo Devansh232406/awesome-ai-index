@@ -83,10 +83,7 @@ Machine-readable JSON. No paywalls. Updated every Friday via GitHub Actions.
 - [Vendor Profiles](#vendor-profiles)
 - [Use as an API](#use-as-an-api)
 - [Academic Citation](#academic-citation)
-- [Contributing](#contributing)
 - [Related Projects](#related-projects)
-- [License](#license)
-
 ---
 
 ## What's Inside
