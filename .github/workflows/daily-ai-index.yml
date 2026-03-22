@@ -7,6 +7,7 @@ on:
 
 permissions:
   contents: write
+  pull-requests: write
 
 jobs:
   update-index:
@@ -15,8 +16,6 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
-        with:
-          token: ${{ secrets.GH_PAT }}
 
       - name: Set up Python 3.12
         uses: actions/setup-python@v5
@@ -45,7 +44,7 @@ jobs:
       - name: Generate events.csv artifact
         run: python scripts/generate_events_csv.py
 
-      - name: Commit and push directly to main
+      - name: Commit and push to main
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
