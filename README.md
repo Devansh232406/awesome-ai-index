@@ -19,7 +19,9 @@ size_categories:
   - 1K<n<10K
 pretty_name: Awesome AI Index
 ---
-# Awesome AI Index [![Awesome](https://awesome.re/badge.svg)](https://awesome.re)
+# Awesome AI Index [![Awesome](https://awesome.re/badge.svg)](https://awesome.re) [![Daily Update](https://img.shields.io/badge/updated-daily-brightgreen)](https://github.com/alpha-one-index/awesome-ai-index/commits/main)
+
+Machine-readable JSON. No paywalls. Updated **daily** via GitHub Actions.
 
 > Curated catalog of AI tools, models, papers, frameworks, and resources for engineers and researchers.
 ## Contents
@@ -53,7 +55,7 @@ pretty_name: Awesome AI Index
 - [Free AI Courses](#free-ai-courses)
 - [AI Research Labs](#ai-research-labs)
 - [AI Conferences & Events](#ai-conferences--events)
-- [Latest Papers (Weekly Updated)](#latest-papers-weekly-updated)
+- [Latest Papers (Daily Updated)](#latest-papers-daily-updated)
 - [Production Tools & APIs](#production-tools--apis)
 - [AI for Science](#ai-for-science)
 - [AI for Healthcare](#ai-for-healthcare)
@@ -70,8 +72,8 @@ pretty_name: Awesome AI Index
 
 | Dataset | Records | Format | Updated |
 |---------|---------|--------|---------|
-| [AI Models](data/models/) | 130+ | JSON | Weekly |
-| [Vendors](data/vendors/) | 40+ | JSON | Weekly |
+| [AI Models](data/models/) | 130+ | JSON | Daily |
+| [Vendors](data/vendors/) | 40+ | JSON | Daily |
 | [Benchmarks](data/benchmarks/) | 12+ | JSON | Monthly |
 | [Compliance Frameworks](data/frameworks/) | 7 | JSON | Quarterly |
 
@@ -110,6 +112,18 @@ models = requests.get(
 open_models = [m for m in models if m.get("license") != "Proprietary" and m.get("mmlu", 0) > 80]
 print(f"Found {len(open_models)} open-source models with MMLU > 80")
 ```
+
+---
+
+## Latest Daily Additions
+
+**Populated automatically every night** by the daily workflow.
+
+- New arXiv papers (cs.AI)
+- Trending Hugging Face models
+- LLM leaderboard updates
+
+*(Full details are appended to `data/` and `ai-index.json` — scroll to the category tables below for the latest entries.)*
 
 ---
 
@@ -724,10 +738,10 @@ print(f"Found {len(open_models)} open-source models with MMLU > 80")
 
 ---
 
-## Latest Papers (Weekly Updated)
+## Latest Papers (Daily Updated)
 
 <details>
-<summary>Click to expand — Notable recent arXiv papers (auto-updated weekly)</summary>
+<summary>Click to expand — Notable recent arXiv papers (auto-updated daily)</summary>
 
 ### March 2026
 
@@ -744,7 +758,7 @@ print(f"Found {len(open_models)} open-source models with MMLU > 80")
 | Chain-of-Thought Prompting | Google | CoT reasoning in LLMs | [2201.11903](https://arxiv.org/abs/2201.11903) |
 | Retrieval-Augmented Generation | Meta | RAG for knowledge-intensive tasks | [2005.11401](https://arxiv.org/abs/2005.11401) |
 
-> This section is auto-updated weekly via GitHub Actions.
+> This section is auto-updated daily via GitHub Actions.
 
 </details>
 
@@ -999,4 +1013,4 @@ Read [CONTRIBUTING.md](CONTRIBUTING.md) for the full guide.
 [![Star History Chart](https://api.star-history.com/svg?repos=alpha-one-index/awesome-ai-index&type=Date)](https://star-history.com/#alpha-one-index/awesome-ai-index&Date)
 
 
-Maintained by [Alpha One Index](https://alphaoneindex.com) | Data updated every Friday | Submit corrections via Issues | [Discussions](https://github.com/alpha-one-index/awesome-ai-index/discussions)
+Maintained by [Alpha One Index](https://alphaoneindex.com) | Data updated daily | Submit corrections via Issues | [Discussions](https://github.com/alpha-one-index/awesome-ai-index/discussions)
