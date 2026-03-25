@@ -239,6 +239,7 @@ print(f"Found {len(open_models)} open-source models with MMLU > 80")
 | [Cognita](https://github.com/truefoundry/cognita) | 4K+ | Python | Open-source RAG framework | Apache-2.0 |
 | [FlashRAG](https://github.com/RUC-NLPIR/FlashRAG) | 2K+ | Python | RAG benchmark toolkit | MIT |
 | [Canopy](https://github.com/pinecone-io/canopy) | 1K+ | Python | RAG with Pinecone | Apache-2.0 |
+| [Kotaemon](https://github.com/Cinnamon/kotaemon) | 2K+ | Python | RAG with Kotaemon | Apache-2.0 |
 
 </details>
 
